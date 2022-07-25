@@ -11,7 +11,7 @@ st.markdown("This protocol will generate an Opentrons protocol to automatically 
             "space is available within the Opentrons OT-2 robot. Always check the simulation of this protocol before running "
             "or perform a dry run.")
 
-input_name=st.text_input('Name of protocol')
+input_name=st.text_input('Name of protocol',value="Default protocol")
 
 number_row=st.slider('Number of columns with samples in input plate:', 1,12,3)
 number_samples=number_row*8
@@ -212,12 +212,11 @@ lines = ['from opentrons import protocol_api\n',
  '\n']
 
 
-lines.insert(0,'\n')
-lines.insert(0,'number_of_rows='+str(number_row)+ '\n')
-lines.insert(0,'tot_dilplates='+str(tot_dilwells_pl)+ '\n')
-lines.insert(0,'tot_agarplates='+str(tot_spot_pl)+ '\n')
-lines.insert(0,'number_dilutions='+str(number_dilutions)+ '\n')
-lines.insert(0,'spot_range='+str(range_tospot_o)+ '\n')
+lines.insert(3,'number_of_rows='+str(number_row)+ '\n')
+lines.insert(3,'tot_dilplates='+str(tot_dilwells_pl)+ '\n')
+lines.insert(3,'tot_agarplates='+str(tot_spot_pl)+ '\n')
+lines.insert(3,'number_dilutions='+str(number_dilutions)+ '\n')
+lines.insert(3,'spot_range='+str(range_tospot_o)+ '\n')
 
 
 if tot_spot_pl+tot_dilwells_pl>5:
@@ -237,10 +236,7 @@ else:
     st.download_button('Download Protocol', ''.join(lines),file_name=input_name+'.txt')
 
 
-
-st.write(
-    "Contact: philip.ruelens(at)kuleuven.be")
-
+st.markdown('<a href="mailto:philip.ruelens@kuleuven.be">Contact me!</a>', unsafe_allow_html=True)
 
 f = open('OT_script.py','r+')
 lines = f.readlines() # read old content
