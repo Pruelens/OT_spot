@@ -6,7 +6,11 @@ metadata = {'apiLevel': '2.11',
             'description': 'Your protocol description'}
 
 
-
+number_of_rows=3
+tot_dilplates=1
+tot_agarplates=1
+number_dilutions=1
+spot_range=[1]
 open_positions=[7,8,4,5,1,2,3]
 rows_plate_temp=['A1', 'A2', 'A3','A4','A5','A6','A7', 'A8', 'A9','A10','A11','A12']
 
@@ -114,14 +118,17 @@ def run(protocol: protocol_api.ProtocolContext):
                          touch_tip='True',
                          new_tip='never'
                          )
-        pipette.transfer(
-            20,
-            [dil_plates[source_row[1]].wells_by_name()[well_name] for well_name in source_row[2][:-1]],
-            [dil_plates[source_row[1]].wells_by_name()[well_name] for well_name in source_row[2][1:]],
-            mix_after=(3, 100),
-            blow_out=True,
-            blowout_location='destination well',
-            new_tip='never')
+        if number_dilutions==1:
+            pass
+        else:
+            pipette.transfer(
+                20,
+                [dil_plates[source_row[1]].wells_by_name()[well_name] for well_name in source_row[2][:-1]],
+                [dil_plates[source_row[1]].wells_by_name()[well_name] for well_name in source_row[2][1:]],
+                mix_after=(3, 100),
+                blow_out=True,
+                blowout_location='destination well',
+                new_tip='never')
 
         pipette.drop_tip()
         if order_dplate.index(source_row) != len(order_dplate)-1:

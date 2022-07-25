@@ -4,11 +4,16 @@ import streamlit as st
 from streamlit.components.v1 import iframe
 
 st.set_page_config(layout="centered", page_icon="", page_title="Opentrons Spotting Protocol Generator")
-st.title("Opentrons Protocol Generator")
+st.title("Opentrons Spotting Protocol Generator")
+st.markdown("This protocol will generate an Opentrons protocol to automatically dilute and spot bacterial samples. "
+            "The input samples should be collected in a 96-well plate loaded from top to bottom, left to right. Large experiments "
+            "that consist of many samples and/or dilutions should be split up as only a limited amount "
+            "space is available within the Opentrons OT-2 robot. Always check the simulation of this protocol before running "
+            "or perform a dry run.")
 
 input_name=st.text_input('Name of protocol')
 
-number_row=st.slider('Number of rows with samples in input plate:', 1,12,3)
+number_row=st.slider('Number of columns with samples in input plate:', 1,12,3)
 number_samples=number_row*8
 values = [str(0),str(1),str(2),str(3),str(4),str(6)]
 default_ix = values.index(str(1))
@@ -35,16 +40,7 @@ tot_spot=number_samples*(range_tospot[1]-range_tospot[0]+1)
 tot_dilwells=number_samples*number_dilutions
 tot_spot_pl=int(tot_spot/96.0001)+1
 tot_dilwells_pl=int(tot_dilwells/96.0001)+1
-st.write(tot_dilwells_pl)
-if tot_spot_pl+tot_dilwells_pl>5:
-    st.write("Too few positions, consider splitting up experiment.")
 
-else:
-    col1, col2 = st.columns(2)
-    with col1:
-        st.write("Total spots:")
-    with col2:
-        st.latex(str(number_samples*(range_tospot[1]-range_tospot[0]+1)))
 
 
 
@@ -55,7 +51,6 @@ lines = ['from opentrons import protocol_api\n',
  "            'protocolName': 'Your Protocol Name',\n",
  "            'author': 'Your Name',\n",
  "            'description': 'Your protocol description'}\n",
- '\n',
  '\n',
  '\n',
  'open_positions=[7,8,4,5,1,2,3]\n',
@@ -165,14 +160,17 @@ lines = ['from opentrons import protocol_api\n',
  "                         touch_tip='True',\n",
  "                         new_tip='never'\n",
  '                         )\n',
- '        pipette.transfer(\n',
- '            20,\n',
- '            [dil_plates[source_row[1]].wells_by_name()[well_name] for well_name in source_row[2][:-1]],\n',
- '            [dil_plates[source_row[1]].wells_by_name()[well_name] for well_name in source_row[2][1:]],\n',
- '            mix_after=(3, 100),\n',
- '            blow_out=True,\n',
- "            blowout_location='destination well',\n",
- "            new_tip='never')\n",
+ '        if number_dilutions==1:\n',
+ '            pass\n',
+ '        else:\n',
+ '            pipette.transfer(\n',
+ '                20,\n',
+ '                [dil_plates[source_row[1]].wells_by_name()[well_name] for well_name in source_row[2][:-1]],\n',
+ '                [dil_plates[source_row[1]].wells_by_name()[well_name] for well_name in source_row[2][1:]],\n',
+ '                mix_after=(3, 100),\n',
+ '                blow_out=True,\n',
+ "                blowout_location='destination well',\n",
+ "                new_tip='never')\n",
  '\n',
  '        pipette.drop_tip()\n',
  '        if order_dplate.index(source_row) != len(order_dplate)-1:\n',
@@ -222,8 +220,21 @@ lines.insert(0,'number_dilutions='+str(number_dilutions)+ '\n')
 lines.insert(0,'spot_range='+str(range_tospot_o)+ '\n')
 
 
-
-st.download_button('Download Protocol', ''.join(lines),file_name=input_name+'.txt')
+if tot_spot_pl+tot_dilwells_pl>5:
+    st.write("Too few positions available to perform protocol, consider splitting up experiment.")
+else:
+    col1, col2 = st.columns(2)
+    with col1:
+        st.write("Total spots:")
+        st.write("Number dilution plates:")
+        st.write("Number Agar plates:")
+        st.write("Rough estimate of protocol duration:")
+    with col2:
+        st.latex(str(number_samples*(range_tospot[1]-range_tospot[0]+1)))
+        st.write(str(tot_dilwells_pl))
+        st.write(str(tot_spot_pl))
+        st.write(str((number_samples*(range_tospot[1]-range_tospot[0]+1)*7.25)/60)+" minutes")
+    st.download_button('Download Protocol', ''.join(lines),file_name=input_name+'.txt')
 
 
 
@@ -231,3 +242,5 @@ st.write(
     "Contact: philip.ruelens(at)kuleuven.be")
 
 
+f = open('OT_script.py','r+')
+lines = f.readlines() # read old content
