@@ -223,9 +223,9 @@ lines.insert(0,'spot_range='+str(range_tospot_o)+ '\n')
 
 
 
-
-st.download_button('Download Protocol', ''.join(lines),file_name=input_name+'.txt')
-
+#
+# st.download_button('Download Protocol', ''.join(lines),file_name=input_name+'.txt')
+#
 
 
 st.write(
