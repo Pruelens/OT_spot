@@ -7,7 +7,7 @@ st.set_page_config(layout="centered", page_icon="", page_title="Opentrons Spotti
 st.title("Opentrons Spotting Protocol Generator")
 st.markdown("This protocol will generate an Opentrons protocol to automatically dilute and spot bacterial samples. "
             "The input samples should be collected in a 96-well plate loaded from top to bottom, left to right. Large experiments "
-            "that consist of many samples and/or dilutions should be split up as only a limited amount "
+            "that consist of many samples and/or dilutions should be split up as only a limited amount of "
             "space is available within the Opentrons OT-2 robot. Always check the simulation of this protocol before running "
             "or perform a dry run.")
 
