@@ -4,3 +4,5 @@ To run locally
   Download main.py 
   install Streamlit (https://docs.streamlit.io/library/get-started/installation)
   Run the following command: streamlit run main.py 
+
+To run the protocol, you will need to also install the custom labware of which the .json files are located in the repo /labware folder.
