@@ -1,9 +1,5 @@
-
 import streamlit as st
-
-from streamlit.components.v1 import iframe
-
-st.set_page_config(layout="centered", page_icon="", page_title="Opentrons Spotting Protocol Generator")
+st.set_page_config(layout="centered", page_title="OT Spotting Protocol Generator", page_icon="🦠")
 st.title("Opentrons Spotting Protocol Generator")
 st.markdown("This protocol will generate an Opentrons protocol to automatically dilute and spot bacterial samples. "
             "The input samples should be collected in a 96-well plate loaded from top to bottom, left to right. Large experiments "
