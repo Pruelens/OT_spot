@@ -44,6 +44,10 @@ tot_dilwells_pl=int(tot_dilwells/96.0001)+1
 
 lines = ['from opentrons import protocol_api\n',
  '\n',
+ '\n',
+ '\n',
+ '\n',
+ '\n',
  "metadata = {'apiLevel': '2.11',\n",
  "            'protocolName': 'Your Protocol Name',\n",
  "            'author': 'Your Name',\n",
